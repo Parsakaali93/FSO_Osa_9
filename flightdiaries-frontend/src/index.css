@@ -1,0 +1,9 @@
+*{
+  font-family: sans-serif;
+}
+
+.submitForm{
+  background-color: #eeeeee;
+  width:500px;
+  padding:30px;
+}

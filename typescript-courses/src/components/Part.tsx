@@ -1,14 +1,14 @@
 import { CoursePart } from "../types";
 
 const assertNever = (value: never): never => {
-throw new Error(
-    `Unhandled discriminated union member: ${JSON.stringify(value)}`
-);
+    throw new Error(
+        `Unhandled discriminated union member: ${JSON.stringify(value)}`
+    );
 };
 
 const Part: React.FC< {part: CoursePart} > = ({ part }) => {
     return (
-      <div>
+      <div style={{marginBottom: 50}}>
         {(() => {
           switch (part.kind) {
             case "basic":
@@ -45,7 +45,7 @@ const Part: React.FC< {part: CoursePart} > = ({ part }) => {
                   <p><b>{part.name}</b></p>
                   <p>Exercises: {part.exerciseCount}</p>
                   <p>Description: {part.description}</p>
-                  <div><p>Requirements: {part.requirements.map((r) => <p style={{display: "inline-block", marginRight: 5}}>{r + ","}</p>)}</p></div>
+                  <p>Requirements: {part.requirements.map((r) => <span style={{display: "inline-block", marginRight: 5}}>{r + ","}</span>)}</p>
                 </div>
               );
   
