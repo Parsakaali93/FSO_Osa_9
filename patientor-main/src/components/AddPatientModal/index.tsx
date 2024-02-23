@@ -5,6 +5,7 @@ import { PatientFormValues } from "../../types";
 
 interface Props {
   modalOpen: boolean;
+  /* onClose is just a function that takes no parameters, and does not return anything, so the type is: */
   onClose: () => void;
   onSubmit: (values: PatientFormValues) => void;
   error?: string;

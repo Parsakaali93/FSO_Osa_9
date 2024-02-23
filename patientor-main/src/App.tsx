@@ -8,8 +8,11 @@ import { Patient } from "./types";
 
 import patientService from "./services/patients";
 import PatientListPage from "./components/PatientListPage";
+import PatientPage from "./components/PatientPage/PatientPage";
 
 const App = () => {
+  /*  the function setPatients has type React.Dispatch<React.SetStateAction<Patient[]>>.
+  We can see the type in the editor when we hover over the function: */
   const [patients, setPatients] = useState<Patient[]>([]);
 
   useEffect(() => {
@@ -34,7 +37,9 @@ const App = () => {
           </Button>
           <Divider hidden />
           <Routes>
+            {/* Component App passes the function setPatients as a prop to the component PatientListPage: */}
             <Route path="/" element={<PatientListPage patients={patients} setPatients={setPatients} />} />
+            <Route path="/patients/:id" element={<PatientPage />} />
           </Routes>
         </Container>
       </Router>

@@ -6,6 +6,10 @@ const getPatientsWithoutSSN = (): NonSensitivePatient[] => {
     return patients.map(({id, name, dateOfBirth, gender, occupation}) => ({id, name, dateOfBirth, gender, occupation}));
 };
 
+const getOnePatient = (id: string): Patient | undefined => {
+    return patients.find(patient => patient.id === id);
+};
+
 const addPatient = (patient: NewPatient): Patient => {
     const newPatient = {
         id: uuid(),
@@ -18,5 +22,6 @@ const addPatient = (patient: NewPatient): Patient => {
 
 export default {
     getPatientsWithoutSSN,
-    addPatient
+    addPatient,
+    getOnePatient
 };
