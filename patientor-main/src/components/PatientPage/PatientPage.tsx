@@ -1,12 +1,16 @@
 import patientService from "../../services/patients";
 import { useParams } from "react-router-dom";
-import { Patient } from "../../types";
+import { Diagnosis, Patient } from "../../types";
 import { useState, useEffect } from "react";
 import FemaleIcon from '@mui/icons-material/Female';
 import MaleIcon from '@mui/icons-material/Male';
 import QuestionMarkSharpIcon from '@mui/icons-material/QuestionMarkSharp';
 
-const PatientPage = () => {
+interface PatientPageProps {
+    diagnoses: Diagnosis[]
+  }
+
+const PatientPage: React.FC<PatientPageProps> = ({diagnoses}) => {
     const { id } = useParams();
     const [patient, setPatient] = useState<Patient>();
 
@@ -20,8 +24,14 @@ const PatientPage = () => {
             }
         };
 
+        console.log(diagnoses);
         fetchPatient();
     }, [id]);
+
+    const getNameFromCode = (code: string): string | undefined => {
+        const diagnosis = diagnoses.find(diagnosis => diagnosis.code === code);
+        return diagnosis ? diagnosis.name : undefined;
+      };
 
     return (
         <div>
@@ -32,6 +42,14 @@ const PatientPage = () => {
                         {patient.gender === 'other' && <QuestionMarkSharpIcon />}</h2>
                 <p style={{margin:0}}>{patient.ssn}</p>
                 <p style={{margin:0}}>{patient.occupation}</p>
+                <div>
+                    {patient.entries.map((entry) => 
+                    <div>
+                        <p>{entry.date}</p>
+                        <p>{entry.description}</p>
+                        <ul>{entry.diagnosisCodes && entry.diagnosisCodes.map((d) => <li>{d + " "}{getNameFromCode(d)}</li>)}</ul>
+                    </div>)
+                    }</div>
             </div>
         )}
         </div>

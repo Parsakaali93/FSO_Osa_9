@@ -3,7 +3,7 @@ import { /*Patient,*/ NewPatient, NonSensitivePatient, Patient } from '../types'
 import { v4 as uuid } from 'uuid';
 
 const getPatientsWithoutSSN = (): NonSensitivePatient[] => {
-    return patients.map(({id, name, dateOfBirth, gender, occupation}) => ({id, name, dateOfBirth, gender, occupation}));
+    return patients.map(({id, name, dateOfBirth, gender, occupation, entries}) => ({id, name, dateOfBirth, gender, occupation, entries}));
 };
 
 const getOnePatient = (id: string): Patient | undefined => {

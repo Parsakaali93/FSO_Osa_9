@@ -10,7 +10,7 @@ router.get('/', (_req, res) => {
 
 // Route to get info for one patient
 router.get('/:id', (req, res) => {
-    const patient = res.send(patientService.getOnePatient(req.params.id));
+    const patient = patientService.getOnePatient(req.params.id);
 
     if(patient)
     {
