@@ -1,0 +1,11 @@
+POST http://localhost:3001/api/patients/d27736ec-f723-11e9-8f0b-362b9e155667/entries
+content-type: application/json
+
+{
+    "date": "2023-09-09",
+    "type":	"OccupationalHealthcare",
+    "specialist": "Dr Workman",
+    "description": "He is almost dead",
+    "employerName": "Monsanto",
+    "diagnosisCodes": ["L20", "H35.29"]
+}

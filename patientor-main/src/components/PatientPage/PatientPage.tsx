@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 import FemaleIcon from '@mui/icons-material/Female';
 import MaleIcon from '@mui/icons-material/Male';
 import QuestionMarkSharpIcon from '@mui/icons-material/QuestionMarkSharp';
+import EntryBox from "./EntryBox";
 
 interface PatientPageProps {
     diagnoses: Diagnosis[]
@@ -28,11 +29,6 @@ const PatientPage: React.FC<PatientPageProps> = ({diagnoses}) => {
         fetchPatient();
     }, [id]);
 
-    const getNameFromCode = (code: string): string | undefined => {
-        const diagnosis = diagnoses.find(diagnosis => diagnosis.code === code);
-        return diagnosis ? diagnosis.name : undefined;
-      };
-
     return (
         <div>
         {patient && (
@@ -44,11 +40,7 @@ const PatientPage: React.FC<PatientPageProps> = ({diagnoses}) => {
                 <p style={{margin:0}}>{patient.occupation}</p>
                 <div>
                     {patient.entries.map((entry) => 
-                    <div>
-                        <p>{entry.date}</p>
-                        <p>{entry.description}</p>
-                        <ul>{entry.diagnosisCodes && entry.diagnosisCodes.map((d) => <li>{d + " "}{getNameFromCode(d)}</li>)}</ul>
-                    </div>)
+                    <EntryBox entry={entry} diagnoses={diagnoses} />)
                     }</div>
             </div>
         )}
@@ -57,3 +49,11 @@ const PatientPage: React.FC<PatientPageProps> = ({diagnoses}) => {
 };
 
 export default PatientPage;
+
+/* {patient.entries.map((entry) => 
+                    <div>
+                        <p>{entry.date}</p>
+                        <p>{entry.description}</p>
+                        <ul>{entry.diagnosisCodes && entry.diagnosisCodes.map((d) => <li>{d + " "}{getNameFromCode(d)}</li>)}</ul>
+                    </div>)
+                    } */

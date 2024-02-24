@@ -1,6 +1,7 @@
 import patientService from "../services/patientService";
 import express from 'express';
 import toNewPatient from '../utils';
+import { toNewEntry } from "../utils";
 
 const router = express.Router();
 
@@ -29,23 +30,19 @@ router.post('/', (req, res) => {
     const newPatient = toNewPatient(req.body);
     const added = patientService.addPatient(newPatient);
     res.json(added);
+});
 
-    // res.send(
-    //     patientService.addPatient(
-    //         // {
-    //         //     id: uuid(),
-    //         //     name: "test name",
-    //         //     dateOfBirth: "12-09-1991",
-    //         //     ssn: "9438AB",
-    //         //     gender: "Male",
-    //         //     occupation: "Plumber"   
-    //         // }
-
-    //         toNewPatient(req.body)
-    //     )
-    // );
+// Route for posting a new entry for the patient
+router.post('/:id/entries', (req, res) => {
+    const patient = patientService.getOnePatient(req.params.id);
     
+    if(!patient)
+        res.status(404).send("Patient not found");
 
+    console.log(req.body);
+    const newEntry = toNewEntry(req.body);
+    const added = patientService.addEntry(newEntry, patient);
+    res.json(added);
 });
 
 export default router;
