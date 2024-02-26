@@ -7,6 +7,9 @@ interface EntryProps {
   }
     
 const HealthCheckEntry: React.FC<EntryProps> = ({entry, diagnoses}) => {
+    if(entry.type != 'HealthCheck')
+        return null;
+
     const getNameFromCode = (code: string): string | undefined => {
 
         const diagnosis = diagnoses.find(diagnosis => diagnosis.code === code);
@@ -22,6 +25,7 @@ const HealthCheckEntry: React.FC<EntryProps> = ({entry, diagnoses}) => {
             <div>
                 <ul>{entry.diagnosisCodes && entry.diagnosisCodes.map((d) => <li>{d + " "}{getNameFromCode(d)}</li>)}</ul>
             </div>
+            {'healthCheckRating' in entry && <div><p>Health Check Rating: {entry.healthCheckRating}</p></div>}
         </div>
     );
 };

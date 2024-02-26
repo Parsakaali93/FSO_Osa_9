@@ -6,6 +6,7 @@ import FemaleIcon from '@mui/icons-material/Female';
 import MaleIcon from '@mui/icons-material/Male';
 import QuestionMarkSharpIcon from '@mui/icons-material/QuestionMarkSharp';
 import EntryBox from "./EntryBox";
+import NewEntryForm from "./NewEntryForm";
 
 interface PatientPageProps {
     diagnoses: Diagnosis[]
@@ -38,6 +39,9 @@ const PatientPage: React.FC<PatientPageProps> = ({diagnoses}) => {
                         {patient.gender === 'other' && <QuestionMarkSharpIcon />}</h2>
                 <p style={{margin:0}}>{patient.ssn}</p>
                 <p style={{margin:0}}>{patient.occupation}</p>
+
+                <NewEntryForm />
+
                 <div>
                     {patient.entries.map((entry) => 
                     <EntryBox entry={entry} diagnoses={diagnoses} />)
