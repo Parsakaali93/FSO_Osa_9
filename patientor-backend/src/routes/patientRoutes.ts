@@ -40,9 +40,20 @@ router.post('/:id/entries', (req, res) => {
         res.status(404).send("Patient not found");
 
     console.log(req.body);
-    const newEntry = toNewEntry(req.body);
-    const added = patientService.addEntry(newEntry, patient);
-    res.json(added);
+
+    try{
+        const newEntry = toNewEntry(req.body);
+        const added = patientService.addEntry(newEntry, patient);
+        res.json(added);
+    }
+
+    catch (error: unknown) {
+        let errorMessage = 'Something went wrong.';
+        if (error instanceof Error) {
+          errorMessage += ' Error: ' + error.message;
+        }
+        res.status(400).send(errorMessage);
+      }
 });
 
 export default router;

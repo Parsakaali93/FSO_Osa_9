@@ -73,13 +73,23 @@ const parseType = (entryType: unknown): EntryType => {
     
 };
 
+const parseDate = (param: unknown): string => {
+  const regex = /^\d{4}-\d{2}-\d{2}$/;
+  if(!isString(param))
+    throw new Error(`Date not a string`);
+  if(regex.test(param))
+    return param;
+  else
+    throw new Error(`Malformatted date`);  
+};
+
 const isDischarge = (param: object): param is Discharge => {
   return (
-    typeof param === 'object' && // Check if param is an object
-    'date' in param && // Check if param has a 'date' property
-    typeof (param as Discharge).date === 'string' && // Check if 'date' property is a string
-    'criteria' in param && // Check if param has a 'criteria' property
-    typeof (param as Discharge).criteria === 'string' // Check if 'criteria' property is a string
+    typeof param === 'object' &&
+    'date' in param && 
+    typeof (param as Discharge).date === 'string' &&
+    'criteria' in param &&
+    typeof (param as Discharge).criteria === 'string'
   );
 };
 
@@ -114,7 +124,7 @@ const parseHealthCheckRating = (hcr: unknown): HealthCheckRating => {
 const toNewPatient = (object: unknown): NewPatient => {
     /* the first type guard checks that the parameter object exists and it has the type object */
     if ( !object || typeof object !== 'object' ) {
-      throw new Error('Incorrect or missing data');
+      throw new Error('Incorrect or missing data');      
     }
 
     /* the second type guard uses the in operator to ensure that the object has all the desired fields: */
@@ -129,7 +139,7 @@ const toNewPatient = (object: unknown): NewPatient => {
         };
       
         return newEntry;
-      }
+    }
 
   throw new Error('Incorrect data: some fields are missing');
 };
@@ -190,7 +200,7 @@ export const toNewEntry = (object: unknown): NewEntry => {
   return {
     ...entryObj,
     description: parseString(object.description),
-    date: parseString(object.date),
+    date: parseDate(object.date),
     specialist: parseString(object.specialist),
     type: parseType(object.type),
     

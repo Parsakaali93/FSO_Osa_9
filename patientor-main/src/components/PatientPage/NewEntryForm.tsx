@@ -6,13 +6,14 @@ import { HealthCheckRating, NewEntry, Diagnosis } from '../../types';
 function NewEntryForm() {
     const { id } = useParams();
 
-    const [selectedForm, setSelectedForm] = useState('');
+    const [selectedForm, setSelectedForm] = useState('healthcheck');
+    const [errorMessage, setErrorMessage] = useState('');
 
     const [formData, setFormData] = useState({
         description: '',
         date: '',
         specialist: '',
-        healthCheckRating: '',
+        healthCheckRating: 'Healthy',
         DiagnosisCodes: '',
         employerName: '',
         sickLeaveStart: '',
@@ -29,7 +30,16 @@ function NewEntryForm() {
     });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSelectChangeForm = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    console.log(name, value);
+    setFormData({
+      ...formData,
+      [name]: value
+    });
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     console.log("Submitting entry");
     e.preventDefault();
 
@@ -40,20 +50,23 @@ function NewEntryForm() {
             return HealthCheckRating.Healthy;
             break;
 
-        case("Low Risk"):
+        case("LowRisk"):
             return HealthCheckRating.LowRisk;
             break;
             
-        case("High Risk"):
+        case("HighRisk"):
             return HealthCheckRating.HighRisk;
             break;
             
-        case("Critical Risk"):
+        case("CriticalRisk"):
             return HealthCheckRating.CriticalRisk;
             break;
 
         default:
+          {
+            setErrorMessage('Invalid Health Check Rating');
             throw new Error('Invalid healthCheckRating');
+          }
         }
       };
 
@@ -111,14 +124,33 @@ function NewEntryForm() {
         }
     }
 
-    createEntry(id as string, newEntry)
+      try{
+        const response = await createEntry(id as string, newEntry);
+        console.log(response);
 
-    .then(response => {
-      console.log('Entry created successfully:', response);
-    })
-    .catch(error => {
-      console.error("Error when creating entry: ", error);
-    });
+        // Clear fields
+        setFormData({
+          description: '',
+          date: '',
+          specialist: '',
+          healthCheckRating: 'Healthy',
+          DiagnosisCodes: '',
+          employerName: '',
+          sickLeaveStart: '',
+          sickLeaveEnd: '',
+          dischargeDate: '',
+          dischargeCriteria: ''
+      });
+      }
+
+      catch(error) {
+        if(typeof error === 'string')
+          setErrorMessage(error);
+
+        else{
+          console.error('Error', error);
+        }
+      }
 
     console.log('Form data submitted:', formData);
   };
@@ -129,6 +161,7 @@ function NewEntryForm() {
 
   return (
     <form onSubmit={handleSubmit} style={{border: "2px dotted black", borderRadius: 30, padding: 30, margin: 20, marginLeft: 0}}>
+    <p style={{color:"red"}}>{errorMessage}</p>
     <h2>New Entry</h2>
       <div className="newEntryInput">
 
@@ -144,6 +177,7 @@ function NewEntryForm() {
         <label htmlFor="Description">Description:</label>
         <input
           type="text"
+          required
           id="description"
           name="description"
           value={formData.description}
@@ -154,6 +188,7 @@ function NewEntryForm() {
         <label htmlFor="date">Date:</label>
         <input
           type="text"
+          required
           id="date"
           name="date"
           value={formData.date}
@@ -164,6 +199,7 @@ function NewEntryForm() {
         <label htmlFor="specialist">Specialist:</label>
         <input
           type="text"
+          required
           id="specialist"
           name="specialist"
           value={formData.specialist}
@@ -183,13 +219,17 @@ function NewEntryForm() {
 
       {selectedForm === "healthcheck" && <div className="newEntryInput">
         <label htmlFor="healthCheckRating">Health Check Rating:</label>
-        <input
-          type="text"
-          id="healthCheckRating"
-          name="healthCheckRating"
-          value={formData.healthCheckRating}
-          onChange={handleChange}
-        />
+          <select
+            id="healthCheckRating"
+            name="healthCheckRating"
+            value={formData.healthCheckRating}
+            onChange={handleSelectChangeForm}
+          >
+              <option value="Healthy">Healthy</option>
+              <option value="LowRisk">Low Risk</option>
+              <option value="HighRisk">High Risk</option>
+              <option value="CriticalRisk">Critical Risk</option>
+         </select>
       </div>}
 
       {selectedForm === "occupational" &&
@@ -234,7 +274,7 @@ function NewEntryForm() {
         <div className="newEntryInput">
             <label htmlFor="dischargeDate">Discharge Date:</label>
             <input
-            type="text"
+            type="date"
             id="dischargeDate"
             name="dischargeDate"
             value={formData.dischargeDate}
